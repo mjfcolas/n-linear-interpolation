@@ -1,0 +1,7 @@
+{
+  "transform": {
+    ".(ts|tsx)": "ts-jest"
+  },
+  "testRegex": "\\.test\\.ts$",
+  "collectCoverage": true
+}

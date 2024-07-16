@@ -1,0 +1,33 @@
+variables:
+  PROJECT_NAME: "n-linear-interpolation"
+
+stages:
+  - build
+  - sonar
+
+build:
+  image: node:latest
+  stage: build
+  script:
+    - npm ci
+    - npm run test
+    - npm run build
+  artifacts:
+    paths:
+      - node_modules
+      - dist
+
+sonar:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [ "" ]
+  stage: sonar
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$PROJECT_NAME -Dsonar.sources=src
