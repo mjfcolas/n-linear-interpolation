@@ -1,7 +1,13 @@
 {
   "name": "@mjfcolas/n-linear-interpolation",
   "version": "0.0.2",
-  "description": "",
+  "description": "1, 2 and 3 dimensions implementation of linear interpolation algorithm for a given set of coordinates and values.",
+  "keywords": [
+    "interpolation",
+    "linear interpolation",
+    "bilinear interpolation",
+    "trilinear interpolation"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
