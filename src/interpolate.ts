@@ -11,38 +11,17 @@ export const interpolate = {
 
 function d3Interpolation(sourceArray: D3Element[], coordinateToInterpolate: D3Coordinate) {
     const boundingHexahedron = getBoundingHexahedron(sourceArray, coordinateToInterpolate);
-
-    const [c000,
-        c001,
-        c010,
-        c011,
-        c100,
-        c101,
-        c110,
-        c111
-    ] = boundingHexahedron;
-
-    if (!c000 || !c001 || !c010 || !c011 || !c100 || !c101 || !c110 || !c111) {
-        throw new Error('OUT_OF_BOUND_ERROR');
-    }
-
-    return interpolateInHexahedron([c000, c001, c010, c011, c100, c101, c110, c111], coordinateToInterpolate);
+    return interpolateInHexahedron(boundingHexahedron, coordinateToInterpolate);
 }
 
 function d2Interpolation(sourceArray: D2Element[], coordinateToInterpolate: D2Coordinate) {
     const boundingQuadrilateral = getBoundingQuadrilateral(sourceArray, coordinateToInterpolate);
-    const [c00, c01, c10, c11] = boundingQuadrilateral;
-    if (!c00 || !c01 || !c10 || !c11) {
-        throw new Error('OUT_OF_BOUND_ERROR');
-    }
     return interpolateInQuadrilateral(boundingQuadrilateral, coordinateToInterpolate);
 }
 
 function d1Interpolation(sourceArray: D1Element[], coordinateToInterpolate: D1Coordinate): number {
     const boundingSegment = getBoundingSegment(sourceArray, coordinateToInterpolate);
-    if (!boundingSegment[0] || !boundingSegment[1]) {
-        throw new Error('OUT_OF_BOUND_ERROR');
-    }
+
     return interpolateInSegment(boundingSegment, coordinateToInterpolate);
 }
 
@@ -88,8 +67,11 @@ function getBoundingSegment(sourceArray: D1Element[], boundedCoordinate: D1Coord
     const c0 = sortedArray.filter(([x1]) => x1 <= x).pop();
     const c1 = sortedArray.filter(([x1]) => x1 >= x && (!c0 || x1 != c0[0])).shift();
 
-    return [c0, c1];
+    if (!c0 || !c1) {
+        throw new Error('OUT_OF_BOUND_ERROR');
+    }
 
+    return [c0, c1];
 }
 
 function getBoundingQuadrilateral(sourceArray: D2Element[], boundedCoordinate: D2Coordinate): Quadrilateral {
@@ -151,6 +133,10 @@ function getBoundingQuadrilateral(sourceArray: D2Element[], boundedCoordinate: D
             && aboveCriteria(potentialCorner, 'Y'))
         .filter(current => !alreadyChosenPoints.includes(current))[0];
     alreadyChosenPoints.push(c11);
+
+    if (!c00 || !c01 || !c10 || !c11) {
+        throw new Error('OUT_OF_BOUND_ERROR');
+    }
 
     return [c00, c01, c10, c11];
 }
@@ -259,6 +245,9 @@ function getBoundingHexahedron(sourceArray: D3Element[], boundedCoordinate: D3Co
         .filter(current => !alreadyChosenPoints.includes(current))[0];
     alreadyChosenPoints.push(c111);
 
+    if (!c000 || !c001 || !c010 || !c011 || !c100 || !c101 || !c110 || !c111) {
+        throw new Error('OUT_OF_BOUND_ERROR');
+    }
     return [c000, c001, c010, c011, c100, c101, c110, c111];
 }
 

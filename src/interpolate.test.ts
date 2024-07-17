@@ -86,7 +86,7 @@ describe("Interpolation", () => {
             expect(interpolate.d2(arrayWithOneSquare, [5, 5])).toEqual(1.5);
         });
 
-        test("x and y interpolation in two unsorded squares", () => {
+        test("x and y interpolation in two unsorted squares", () => {
             expect(interpolate.d2(arrayWithTwoUnsortedSquares, [5, 5])).toEqual(1.5);
         });
     });
