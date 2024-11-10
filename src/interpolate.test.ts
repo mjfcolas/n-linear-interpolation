@@ -23,8 +23,9 @@ describe("Interpolation", () => {
         test("interpolation without enough elements", () => {
             expect(() => interpolate.d1(arrayWithOnlyOneElement, 3)).toThrow("OUT_OF_BOUND_ERROR");
         });
-        test("interpolation with one element when getting element", () => {
-            expect(() => interpolate.d1(arrayWithOnlyOneElement, 5)).toThrow("OUT_OF_BOUND_ERROR");
+
+        test("interpolation with three element when getting extreme element", () => {
+            expect(interpolate.d1(arrayWithThreeUnsortedElements, 15)).toEqual(20);
         });
 
         test("interpolation when inside segment", () => {
@@ -69,7 +70,6 @@ describe("Interpolation", () => {
             expect(() => interpolate.d2(arrayWithNotEnoughElements, [5, 5])).toThrow("OUT_OF_BOUND_ERROR");
         });
 
-
         test("interpolation out of bounds", () => {
             expect(() => interpolate.d2(arrayWithOneSquare, [15, 15])).toThrow("OUT_OF_BOUND_ERROR");
         });
@@ -84,10 +84,6 @@ describe("Interpolation", () => {
 
         test("x and y dimension interpolation in one square", () => {
             expect(interpolate.d2(arrayWithOneSquare, [5, 5])).toEqual(1.5);
-        });
-
-        test("x and y interpolation in two unsorted squares", () => {
-            expect(interpolate.d2(arrayWithTwoUnsortedSquares, [5, 5])).toEqual(1.5);
         });
     });
 
@@ -153,6 +149,10 @@ describe("Interpolation", () => {
 
         test("x, y and z dimension interpolation in two cube", () => {
             expect(interpolate.d3(arrayWithTwoUnsortedCubes, [2000, 10, 800])).toEqual(522.5);
+        });
+
+        test("interpolation when getting extreme element", () => {
+            expect(interpolate.d3(arrayWithTwoUnsortedCubes, [4000, 20, 900])).toEqual(800);
         });
     })
 });

@@ -20,8 +20,8 @@ function d2Interpolation(sourceArray: D2Element[], coordinateToInterpolate: D2Co
 }
 
 function d1Interpolation(sourceArray: D1Element[], coordinateToInterpolate: D1Coordinate): number {
-    const boundingSegment = getBoundingSegment(sourceArray, coordinateToInterpolate);
 
+    const boundingSegment = getBoundingSegment(sourceArray, coordinateToInterpolate);
     return interpolateInSegment(boundingSegment, coordinateToInterpolate);
 }
 
@@ -61,11 +61,35 @@ function interpolateInSegment(segment: Segment, coordinateToInterpolate: D1Coord
 
 function getBoundingSegment(sourceArray: D1Element[], boundedCoordinate: D1Coordinate): Segment {
     const x = boundedCoordinate;
+    const maxX = Math.max(...sourceArray.map(([x]) => x));
+
+    const belowCriteria =
+        ([x1,]: [X, any]) => {
+            return x === maxX ? x1 < x : x1 <= x;
+        }
+
+    const aboveCriteria =
+        ([x1,]: [X, any]) => {
+            return x === maxX ? x1 >= x : x1 > x;
+        }
 
     const sortedArray = [...sourceArray].sort(([x1], [x2]) => x1 - x2);
+    const alreadyChosenPoints = []
 
-    const c0 = sortedArray.filter(([x1]) => x1 <= x).pop();
-    const c1 = sortedArray.filter(([x1]) => x1 >= x && (!c0 || x1 != c0[0])).shift();
+    const c0 = sortedArray
+        .filter((potentialCorner) =>
+            belowCriteria(potentialCorner))
+        .filter(current => !alreadyChosenPoints.includes(current))[0];
+    alreadyChosenPoints.push(c0);
+
+    const c1 = sortedArray
+        .filter((potentialCorner) =>
+            aboveCriteria(potentialCorner))
+        .filter(current => !alreadyChosenPoints.includes(current))[0];
+    alreadyChosenPoints.push(c1);
+
+    // const c0 = sourceArray.filter(([x1]) => x1 <= x).pop();
+    // const c1 = sourceArray.filter(([x1]) => x1 >= x && (!c0 || x1 != c0[0])).shift();
 
     if (!c0 || !c1) {
         throw new Error('OUT_OF_BOUND_ERROR');
