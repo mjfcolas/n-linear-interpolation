@@ -73,7 +73,9 @@ function getBoundingSegment(sourceArray: D1Element[], boundedCoordinate: D1Coord
             return x === maxX ? x1 >= x : x1 > x;
         }
 
-    const sortedArray = [...sourceArray].sort(([x1], [x2]) => x1 - x2);
+    const sortedArray = [...sourceArray]
+        .sort(([x1, y1], [x2, y2]) => oneDimensionSquareDistance(x1, x)
+            - oneDimensionSquareDistance(x2, x));
     const alreadyChosenPoints = []
 
     const c0 = sortedArray
@@ -281,4 +283,8 @@ function threeDimensionSquaredDistance([x1, y1, z1], [x2, y2, z2]) {
 
 function twoDimensionSquaredDistance([x1, y1], [x2, y2]) {
     return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
+}
+
+function oneDimensionSquareDistance(x1: D1Coordinate, x2: D1Coordinate) {
+    return Math.pow(x1 - x2, 2);
 }

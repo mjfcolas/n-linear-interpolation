@@ -20,6 +20,7 @@ describe("Interpolation", () => {
             [15, 20]
         ];
 
+
         test("interpolation without enough elements", () => {
             expect(() => interpolate.d1(arrayWithOnlyOneElement, 3)).toThrow("OUT_OF_BOUND_ERROR");
         });
@@ -38,6 +39,10 @@ describe("Interpolation", () => {
 
         test("interpolation when inside one of the two segments", () => {
             expect(interpolate.d1(arrayWithThreeUnsortedElements, 7.5)).toEqual(3);
+        });
+
+        test("interpolation when inside one of the other segment", () => {
+            expect(interpolate.d1(arrayWithThreeUnsortedElements, 12.5)).toEqual(12);
         });
 
     });
